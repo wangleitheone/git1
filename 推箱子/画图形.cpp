@@ -18,3 +18,9 @@ void ball(int x, int y)//画一个目标点，参数为目标点中心点xy坐标
 	setfillcolor(RGB(225, 0, 0));
 	fillcircle(x,y,10);
 }
+void people(int x, int y)//画一个人，参数为人中心点xy坐标
+{
+	setlinecolor(RGB(0, 0, 225));
+	setfillcolor(RGB(0, 0, 225));
+	fillrectangle(x - 15, y - 15, x + 15, y + 15);
+}
