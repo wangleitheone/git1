@@ -2,28 +2,42 @@
 #include<graphics.h>
 #include<stdio.h>
 #define KEY_DOWN(vk_c) (GetAsyncKeyState(vk_c)&0x8000)
-void draw_map(int a[10][10])//将地图画出，使用数组储存地图信息，0为空白，1为墙壁，2为箱子，3为人，4为目标点
+int peoplexy[2] = { 0 };		 //存放人物所在坐标
+void draw_map(int a[10][10])//将地图画出，使用数组储存地图信息，0为空白，
 {
 	int y,x;
 	for ( y = 0; y < 10; y++)
 	{
 		for (x = 0; x < 10; x++)
 		{
-			if (a[y][x]==1)
+			if (a[y][x]==1)//1为墙壁
 			{
 				wall(x,y);
 			}
-			else if (a[y][x] == 2)
+			else if (a[y][x] == 2)//2为箱子
 			{
 				box(x,y);
 			}
-			else if (a[y][x] == 3)
+			else if (a[y][x] == 3)//3为人
 			{
 				people(x,y);
+				peoplexy[0] = y;
+				peoplexy[1] = x;
 			}
-			else if (a[y][x] == 4)
+			else if (a[y][x] == 4)//4为目标点
 			{
 				point(x,y);
+			}
+			else if (a[y][x] == 5)//5为人与目标点重合
+			{
+				people(x, y);
+				peoplexy[0] = y;
+				peoplexy[1] = x;
+			}
+			else if(a[y][x] == 6)//6为箱子与目标点重合
+			{
+				box(x, y);
+				point(x, y);
 			}
 		}
 	}
@@ -186,46 +200,6 @@ void change_map(int b,int a[10][10])//更换地图数据
 	}
 	
 }
-void getpeoplexy(int a[10][10],int peoplexy[2])//获取人物所在坐标
-{
-	for (int y = 0; y < 10; y++)
-	{
-		for (int x = 0; x < 10; x++)
-		{
-			if (a[y][x]==3)
-			{
-				peoplexy[0] = y;
-				peoplexy[1] = x;
-			}
-		}
-	}
-}
-void getpointxy(int a[10][10], int pointxy[10][10])//获取目标点所在坐标
-{
-	for (int y = 0; y < 10; y++)
-	{
-		for (int x = 0; x < 10; x++)
-		{
-			if (a[y][x] == 4)
-			{
-				pointxy[y][x] = 1;
-			}
-		}
-	}
-}
-void getboxxy(int a[10][10], int boxxy[10][10])//获取箱子所在坐标
-{
-	for (int y = 0; y < 10; y++)
-	{
-		for (int x = 0; x < 10; x++)
-		{
-			if (a[y][x] == 2)
-			{
-				boxxy[y][x] = 1;
-			}
-		}
-	}
-}
 int key()//追踪键盘输入信息
 {
 		if (KEY_DOWN(VK_DOWN))
@@ -253,7 +227,7 @@ int key()//追踪键盘输入信息
 			return 6;
 		}
 }
-void judge(int a, int map[10][10], int peoplexy[2],int boxxy[10][10])
+void judge(int a, int map[10][10], int peoplexy[2])
 {
 	int y = peoplexy[0];
 	int x = peoplexy[1];
@@ -262,93 +236,581 @@ void judge(int a, int map[10][10], int peoplexy[2],int boxxy[10][10])
 	case 1://向下
 		if (map[y+1][x] == 0)//目标方向为空
 		{
-			clean(x, y);
-			people(x,y+1);
-			peoplexy[0] = y + 1;
-			map[y][x] = 0;
-			map[y + 1][x] = 3;
+			if (map[y][x] == 5)//人与目标点重合
+			{
+				clean(x, y);
+				point(x, y);
+				people(x, y + 1);
+				peoplexy[0] = y + 1;
+				map[y][x] = 4;
+				map[y + 1][x] = 3;
+			}
+			else
+			{
+				clean(x, y);
+				people(x, y + 1);
+				peoplexy[0] = y + 1;
+				map[y][x] = 0;
+				map[y + 1][x] = 3;
+			}
 		}
-		else if (map[y+1][x] == 2 && map[y+2][x] != 1)//目标方向为箱子，箱子旁边不为墙壁
+		else if (map[y + 1][x] == 4)//目标方向为目标点
 		{
-			clean(x, y);
-			clean(x, y+1);
-			people(x, y+1);
-			box(x, y+2);
-			boxxy[y+1][x] = 0;
-			boxxy[y+2][x] = 1;
-			map[y + 2][x] = 2;
-			map[y][x] = 0;
-			map[y + 1][x] = 3;
-			peoplexy[0] = y + 1;
+			if (map[y][x] == 5)//人与目标点重合
+			{
+				clean(x, y);
+				point(x, y);
+				people(x, y + 1);
+				peoplexy[0] = y + 1;
+				map[y][x] = 4;
+				map[y + 1][x] = 5;
+			}
+			else
+			{
+				clean(x, y);
+				people(x, y + 1);
+				peoplexy[0] = y + 1;
+				map[y][x] = 0;
+				map[y + 1][x] = 5;
+			}
+		}
+		else if ((map[y+1][x] == 2|| map[y + 1][x] == 6) && map[y+2][x] != 1)//目标方向为箱子，箱子旁边不为墙壁
+		{
+			if (map[y][x] == 5&& map[y + 1][x] == 2&& map[y + 2][x] != 4)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x, y + 1);
+				point(x, y);
+				people(x, y + 1);
+				peoplexy[0] = y + 1;
+				box(x, y + 2);
+				map[y][x] = 4;
+				map[y + 1][x] = 3;
+				map[y + 2][x] = 2;
+			}
+			else if(map[y][x] == 5 && map[y + 1][x] == 2 && map[y + 2][x] == 4)//人与目标重合，箱子不与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x, y + 1);
+				clean(x, y + 2);
+				point(x, y);
+				people(x, y + 1);
+				peoplexy[0] = y + 1;
+				box(x, y + 2);
+				point(x, y + 2);
+				map[y][x] = 4;
+				map[y + 1][x] = 3;
+				map[y + 2][x] = 6;
+			}
+			else if (map[y][x] == 5 && map[y + 1][x] == 6 && map[y + 2][x] != 4)//人与目标重合，箱子与目标重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x, y + 1);
+				point(x, y);
+				people(x, y + 1);
+				peoplexy[0] = y + 1;
+				box(x, y + 2);
+				map[y][x] = 4;
+				map[y + 1][x] = 5;
+				map[y + 2][x] = 2;
+			}
+			else if (map[y][x] == 5 && map[y + 1][x] == 6 && map[y + 2][x] == 4)//人与目标重合，箱子与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x, y + 1);
+				clean(x, y + 2);
+				point(x, y);
+				people(x, y + 1);
+				peoplexy[0] = y + 1;
+				box(x, y + 2);
+				point(x, y + 2);
+				map[y][x] = 4;
+				map[y + 1][x] = 5;
+				map[y + 2][x] = 6;
+			}
+			else if (map[y][x] == 3 && map[y + 1][x] == 2 && map[y + 2][x] == 0)//人不与目标重合，箱子不与目标重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x, y + 1);
+				people(x, y + 1);
+				peoplexy[0] = y + 1;
+				box(x, y + 2);
+				map[y][x] = 0;
+				map[y + 1][x] = 3;
+				map[y + 2][x] = 2;
+			}
+			else if (map[y][x] == 3 && map[y + 1][x] == 2 && map[y + 2][x] == 4)//人不与目标重合，箱子不与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x, y + 1);
+				clean(x, y + 2);
+				people(x, y + 1);
+				peoplexy[0] = y + 1;
+				box(x, y + 2);
+				point(x, y + 2);
+				map[y][x] = 0;
+				map[y + 1][x] = 3;
+				map[y + 2][x] = 6;
+			}
+			else if (map[y][x] == 3 && map[y + 1][x] == 6 && map[y + 2][x] == 0)//人不与目标重合，箱子与目标重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x, y + 1);
+				people(x, y + 1);
+				peoplexy[0] = y + 1;
+				box(x, y + 2);
+				map[y][x] = 0;
+				map[y + 1][x] = 5;
+				map[y + 2][x] = 2;
+			}
+			else if (map[y][x] == 3 && map[y + 1][x] == 6 && map[y + 2][x] == 4)//人不与目标重合，箱子与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x, y + 1);
+				clean(x, y + 2);
+				people(x, y + 1);
+				peoplexy[0] = y + 1;
+				box(x, y + 2);
+				point(x, y + 2);
+				map[y][x] = 0;
+				map[y + 1][x] = 5;
+				map[y + 2][x] = 6;
+			}
 		}
 		break;
 	case 2://向上
 		if (map[y - 1][x] == 0)//目标方向为空
 		{
-			clean(x, y);
-			people(x, y - 1);
-			peoplexy[0] = y - 1;
-			map[y][x] = 0;
-			map[y - 1][x] = 3;
+			if (map[y][x] == 5)//人与目标点重合
+			{
+				clean(x, y);
+				point(x, y);
+				people(x, y - 1);
+				peoplexy[0] = y - 1;
+				map[y][x] = 4;
+				map[y - 1][x] = 3;
+			}
+			else
+			{
+				clean(x, y);
+				people(x, y - 1);
+				peoplexy[0] = y - 1;
+				map[y][x] = 0;
+				map[y - 1][x] = 3;
+			}
 		}
-		else if (map[y - 1][x] == 2 && map[y - 2][x] != 1)//目标方向为箱子，箱子旁边不为墙壁
+		else if (map[y - 1][x] == 4)//目标方向为目标点
 		{
-			clean(x, y);
-			clean(x, y - 1);
-			people(x, y - 1);
-			box(x, y - 2);
-			boxxy[y - 1][x] = 0;
-			boxxy[y - 2][x] = 1;
-			map[y - 2][x] = 2;
-			map[y][x] = 0;
-			map[y - 1][x] = 3;
-			peoplexy[0] = y - 1;
+			if (map[y][x] == 5)//人与目标点重合
+			{
+				clean(x, y);
+				point(x, y);
+				people(x, y - 1);
+				peoplexy[0] = y - 1;
+				map[y][x] = 4;
+				map[y - 1][x] = 5;
+			}
+			else
+			{
+				clean(x, y);
+				people(x, y - 1);
+				peoplexy[0] = y - 1;
+				map[y][x] = 0;
+				map[y - 1][x] = 5;
+			}
+		}
+		else if ((map[y - 1][x] == 2 || map[y - 1][x] == 6) && map[y - 2][x] != 1)//目标方向为箱子，箱子旁边不为墙壁
+		{
+			if (map[y][x] == 5 && map[y - 1][x] == 2 && map[y - 2][x] != 4)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x, y - 1);
+				point(x, y);
+				people(x, y - 1);
+				peoplexy[0] = y - 1;
+				box(x, y - 2);
+				map[y][x] = 4;
+				map[y - 1][x] = 3;
+				map[y - 2][x] = 2;
+			}
+			else if (map[y][x] == 5 && map[y - 1][x] == 2 && map[y - 2][x] == 4)//人与目标重合，箱子不与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x, y - 1);
+				clean(x, y - 2);
+				point(x, y);
+				people(x, y - 1);
+				peoplexy[0] = y - 1;
+				box(x, y - 2);
+				point(x, y - 2);
+				map[y][x] = 4;
+				map[y - 1][x] = 3;
+				map[y - 2][x] = 6;
+			}
+			else if (map[y][x] == 5 && map[y - 1][x] == 6 && map[y - 2][x] != 4)//人与目标重合，箱子与目标重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x, y - 1);
+				point(x, y);
+				people(x, y - 1);
+				peoplexy[0] = y - 1;
+				box(x, y - 2);
+				map[y][x] = 4;
+				map[y - 1][x] = 5;
+				map[y - 2][x] = 2;
+			}
+			else if (map[y][x] == 5 && map[y - 1][x] == 6 && map[y - 2][x] == 4)//人与目标重合，箱子与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x, y - 1);
+				clean(x, y - 2);
+				point(x, y);
+				people(x, y - 1);
+				peoplexy[0] = y - 1;
+				box(x, y - 2);
+				point(x, y - 2);
+				map[y][x] = 4;
+				map[y - 1][x] = 5;
+				map[y - 2][x] = 6;
+			}
+			else if (map[y][x] == 3 && map[y - 1][x] == 2 && map[y - 2][x] == 0)//人不与目标重合，箱子不与目标重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x, y - 1);
+				people(x, y - 1);
+				peoplexy[0] = y - 1;
+				box(x, y - 2);
+				map[y][x] = 0;
+				map[y - 1][x] = 3;
+				map[y - 2][x] = 2;
+			}
+			else if (map[y][x] == 3 && map[y - 1][x] == 2 && map[y - 2][x] == 4)//人不与目标重合，箱子不与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x, y - 1);
+				clean(x, y - 2);
+				people(x, y - 1);
+				peoplexy[0] = y - 1;
+				box(x, y - 2);
+				point(x, y - 2);
+				map[y][x] = 0;
+				map[y - 1][x] = 3;
+				map[y - 2][x] = 6;
+			}
+			else if (map[y][x] == 3 && map[y - 1][x] == 6 && map[y - 2][x] == 0)//人不与目标重合，箱子与目标重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x, y - 1);
+				people(x, y - 1);
+				peoplexy[0] = y - 1;
+				box(x, y - 2);
+				map[y][x] = 0;
+				map[y - 1][x] = 5;
+				map[y - 2][x] = 2;
+			}
+			else if (map[y][x] == 3 && map[y - 1][x] == 6 && map[y - 2][x] == 4)//人不与目标重合，箱子与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x, y - 1);
+				clean(x, y - 2);
+				people(x, y - 1);
+				peoplexy[0] = y - 1;
+				box(x, y - 2);
+				point(x, y - 2);
+				map[y][x] = 0;
+				map[y - 1][x] = 5;
+				map[y - 2][x] = 6;
+			}
 		}
 		break;
 	case 3://向左
 		if (map[y][x-1] == 0)//目标方向为空
 		{
-			clean(x, y);
-			people(x-1, y);
-			peoplexy[1] = x-1;
-			map[y][x] = 0;
-			map[y][x - 1] = 3;
+			if (map[y][x] == 5)//人与目标点重合
+			{
+				clean(x, y);
+				point(x, y);
+				people(x-1, y);
+				peoplexy[1] = x - 1;
+				map[y][x] = 4;
+				map[y][x-1] = 3;
+			}
+			else
+			{
+				clean(x, y);
+				people(x-1, y);
+				peoplexy[1] = x - 1;
+				map[y][x] = 0;
+				map[y][x-1] = 3;
+			}
 		}
-		else if (map[y][x-1] == 2 && map[y][x-2] != 1)//目标方向为箱子，箱子旁边不为墙壁
+		else if (map[y][x-1] == 4)//目标方向为目标点
 		{
-			clean(x, y);
-			clean(x-1, y);
-			people(x-1, y);
-			box(x-2, y);
-			boxxy[y][x-1] = 0;
-			boxxy[y][x-2] = 1;
-			map[y][x] = 0;
-			map[y][x-1] = 3;
-			map[y][x-2] = 2;
-			peoplexy[1] = x-1;
+			if (map[y][x] == 5)//人与目标点重合
+			{
+				clean(x, y);
+				point(x, y);
+				people(x - 1, y);
+				peoplexy[1] = x - 1;
+				map[y][x] = 4;
+				map[y][x - 1] = 5;
+			}
+			else
+			{
+				clean(x, y);
+				people(x - 1, y);
+				peoplexy[1] = x - 1;
+				map[y][x] = 0;
+				map[y][x - 1] = 5;
+			}
+		}
+		else if ((map[y][x - 1] == 2 || map[y][x - 1] == 6) && map[y][x - 2] != 1)//目标方向为箱子，箱子旁边不为墙壁
+		{
+			if (map[y][x] == 5 && map[y][x - 1] == 2 && map[y][x - 2] != 4)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x - 1, y);
+				point(x, y);
+				people(x - 1, y);
+				peoplexy[1] = x - 1;
+				box(x - 2, y);
+				map[y][x] = 4;
+				map[y][x - 1] = 3;
+				map[y][x - 2] = 2;
+			}
+			else if (map[y][x] == 5 && map[y][x - 1] == 2 && map[y][x - 2] == 4)//人与目标重合，箱子不与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x - 1, y);
+				clean(x - 2, y);
+				point(x, y);
+				people(x - 1, y);
+				peoplexy[1] = x - 1;
+				box(x - 2, y);
+				point(x - 2, y);
+				map[y][x] = 4;
+				map[y][x - 1] = 3;
+				map[y][x - 2] = 6;
+			}
+			else if (map[y][x] == 5 && map[y][x - 1] == 6 && map[y][x - 2] != 4)//人与目标重合，箱子与目标重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x - 1, y);
+				point(x, y);
+				people(x - 1, y);
+				peoplexy[1] = x - 1;
+				box(x - 2, y);
+				map[y][x] = 4;
+				map[y][x - 1] = 5;
+				map[y][x - 2] = 2;
+			}
+			else if (map[y][x] == 5 && map[y][x - 1] == 6 && map[y][x - 2] == 4)//人与目标重合，箱子与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x - 1, y);
+				clean(x - 2, y);
+				point(x, y);
+				people(x - 1, y);
+				peoplexy[1] = x - 1;
+				box(x - 2, y);
+				point(x - 2, y);
+				map[y][x] = 4;
+				map[y][x - 1] = 5;
+				map[y][x - 2] = 6;
+			}
+			else if (map[y][x] == 3 && map[y][x - 1] == 2 && map[y][x - 2] == 0)//人不与目标重合，箱子不与目标重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x - 1, y);
+				people(x - 1, y);
+				peoplexy[1] = x - 1;
+				box(x - 2, y);
+				map[y][x] = 0;
+				map[y][x - 1] = 3;
+				map[y][x - 2] = 2;
+			}
+			else if (map[y][x] == 3 && map[y][x - 1] == 2 && map[y][x - 2] == 4)//人不与目标重合，箱子不与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x - 1, y);
+				clean(x - 2, y);
+				people(x - 1, y);
+				peoplexy[1] = x - 1;
+				box(x - 2, y);
+				point(x - 2, y);
+				map[y][x] = 0;
+				map[y][x - 1] = 3;
+				map[y][x - 2] = 6;
+			}
+			else if (map[y][x] == 3 && map[y][x - 1] == 6 && map[y][x - 2] == 0)//人不与目标重合，箱子与目标重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x - 1, y);
+				people(x - 1, y);
+				peoplexy[1] = x - 1;
+				box(x - 2, y);
+				map[y][x] = 0;
+				map[y][x - 1] = 5;
+				map[y][x - 2] = 2;
+			}
+			else if (map[y][x] == 3 && map[y][x - 1] == 6 && map[y][x - 2] == 4)//人不与目标重合，箱子与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x - 1, y);
+				clean(x - 2, y);
+				people(x - 1, y);
+				peoplexy[1] = x - 1;
+				box(x - 2, y);
+				point(x - 2, y);
+				map[y][x] = 0;
+				map[y][x - 1] = 5;
+				map[y][x - 2] = 6;
+			}
 		}
 		break;
 	case 4://向右
 		if (map[y][x + 1] == 0)//目标方向为空
 		{
-			clean(x, y);
-			people(x + 1, y);
-			peoplexy[1] = x + 1;
-			map[y][x] = 0;
-			map[y][x + 1] = 3;
+			if (map[y][x] == 5)//人与目标点重合
+			{
+				clean(x, y);
+				point(x, y);
+				people(x + 1, y);
+				peoplexy[1] = x + 1;
+				map[y][x] = 4;
+				map[y][x + 1] = 3;
+			}
+			else
+			{
+				clean(x, y);
+				people(x + 1, y);
+				peoplexy[1] = x + 1;
+				map[y][x] = 0;
+				map[y][x + 1] = 3;
+			}
 		}
-		else if (map[y][x + 1] == 2 && map[y][x + 2] != 1)//目标方向为箱子，箱子旁边不为墙壁
+		else if (map[y][x + 1] == 4)//目标方向为目标点
 		{
-			clean(x, y);
-			clean(x + 1, y);
-			people(x + 1, y);
-			box(x + 2, y);
-			boxxy[y][x + 1] = 0;
-			boxxy[y][x + 2] = 1;
-			map[y][x] = 0;
-			map[y][x + 1] = 3;
-			map[y][x + 2] = 2;
-			peoplexy[1] = x + 1;
+			if (map[y][x] == 5)//人与目标点重合
+			{
+				clean(x, y);
+				point(x, y);
+				people(x + 1, y);
+				peoplexy[1] = x + 1;
+				map[y][x] = 4;
+				map[y][x + 1] = 5;
+			}
+			else
+			{
+				clean(x, y);
+				people(x + 1, y);
+				peoplexy[1] = x + 1;
+				map[y][x] = 0;
+				map[y][x + 1] = 5;
+			}
+		}
+		else if ((map[y][x + 1] == 2 || map[y][x + 1] == 6) && map[y][x + 2] != 1)//目标方向为箱子，箱子旁边不为墙壁
+		{
+			if (map[y][x] == 5 && map[y][x + 1] == 2 && map[y][x + 2] != 4)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x + 1, y);
+				point(x, y);
+				people(x + 1, y);
+				peoplexy[1] = x + 1;
+				box(x + 2, y);
+				map[y][x] = 4;
+				map[y][x + 1] = 3;
+				map[y][x + 2] = 2;
+			}
+			else if (map[y][x] == 5 && map[y][x + 1] == 2 && map[y][x + 2] == 4)//人与目标重合，箱子不与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x + 1, y);
+				clean(x + 2, y);
+				point(x, y);
+				people(x + 1, y);
+				peoplexy[1] = x + 1;
+				box(x + 2, y);
+				point(x + 2, y);
+				map[y][x] = 4;
+				map[y][x + 1] = 3;
+				map[y][x + 2] = 6;
+			}
+			else if (map[y][x] == 5 && map[y][x + 1] == 6 && map[y][x + 2] != 4)//人与目标重合，箱子与目标重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x + 1, y);
+				point(x, y);
+				people(x + 1, y);
+				peoplexy[1] = x + 1;
+				box(x + 2, y);
+				map[y][x] = 4;
+				map[y][x + 1] = 5;
+				map[y][x + 2] = 2;
+			}
+			else if (map[y][x] == 5 && map[y][x + 1] == 6 && map[y][x + 2] == 4)//人与目标重合，箱子与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x + 1, y);
+				clean(x + 2, y);
+				point(x, y);
+				people(x + 1, y);
+				peoplexy[1] = x + 1;
+				box(x + 2, y);
+				point(x + 2, y);
+				map[y][x] = 4;
+				map[y][x + 1] = 5;
+				map[y][x + 2] = 6;
+			}
+			else if (map[y][x] == 3 && map[y][x + 1] == 2 && map[y][x + 2] == 0)//人不与目标重合，箱子不与目标重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x + 1, y);
+				people(x + 1, y);
+				peoplexy[1] = x + 1;
+				box(x + 2, y);
+				map[y][x] = 0;
+				map[y][x + 1] = 3;
+				map[y][x + 2] = 2;
+			}
+			else if (map[y][x] == 3 && map[y][x + 1] == 2 && map[y][x + 2] == 4)//人不与目标重合，箱子不与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x + 1, y);
+				clean(x + 2, y);
+				people(x + 1, y);
+				peoplexy[1] = x + 1;
+				box(x + 2, y);
+				point(x + 2, y);
+				map[y][x] = 0;
+				map[y][x + 1] = 3;
+				map[y][x + 2] = 6;
+			}
+			else if (map[y][x] == 3 && map[y][x + 1] == 6 && map[y][x + 2] == 0)//人不与目标重合，箱子与目标重合，箱子方向不为目标点
+			{
+				clean(x, y);
+				clean(x + 1, y);
+				people(x + 1, y);
+				peoplexy[1] = x + 1;
+				box(x + 2, y);
+				map[y][x] = 0;
+				map[y][x + 1] = 5;
+				map[y][x + 2] = 2;
+			}
+			else if (map[y][x] == 3 && map[y][x + 1] == 6 && map[y][x + 2] == 4)//人不与目标重合，箱子与目标重合，箱子方向为目标点
+			{
+				clean(x, y);
+				clean(x + 1, y);
+				clean(x + 2, y);
+				people(x + 1, y);
+				peoplexy[1] = x + 1;
+				box(x + 2, y);
+				point(x + 2, y);
+				map[y][x] = 0;
+				map[y][x + 1] = 5;
+				map[y][x + 2] = 6;
+			}
 		}
 		break;
 	case 5:
@@ -357,13 +819,13 @@ void judge(int a, int map[10][10], int peoplexy[2],int boxxy[10][10])
 		break;
 	}
 }
-int judge1(int boxxy[10][10], int pointxy[10][10])
+int judge1(int map[10][10])
 {
 	for (int y = 0; y < 10; y++)
 	{
 		for (int x = 0; x < 10; x++)
 		{
-			if (boxxy[y][x] != pointxy[y][x])
+			if (map[y][x] == 2)
 			{
 				return 1;
 			}
@@ -377,24 +839,18 @@ int main()
 	initgraph(640, 500);
 	int num = 1;                     //关卡计数
 	int map[10][10] = { 0 };         //存放地图数据
-	int peoplexy[2] = { 0 };		 //存放人物所在坐标
-	int pointxy[10][10] = { 0 };		 //存放坐标点所在位置
-	int boxxy[10][10] = { 0 };		 //存放箱子所在位置
 	while (1)
 	{
 		int k = 1;
 		change_map(num,map);		//更换地图
 		cleardevice();				//清空屏幕，当前坐标点重置至(0,0)；
 		draw_map(map);				//重新画出地图
-		getpeoplexy(map,  peoplexy);//获取当前地图人物所在坐标
-		getpointxy(map, pointxy);     //获取当前地图目标点所在坐标
-		getboxxy(map, boxxy);			//获取当前地图箱子所在坐标
 		while (k)					//游戏进行
 		{
 			int s = key();			//接收键盘操作
-			judge(s, map, peoplexy, boxxy);	//判断键盘操作并执行执行
+			judge(s, map, peoplexy);	//判断键盘操作并执行执行
 			Sleep(100);					
-			k = judge1(boxxy, pointxy);						//判断游戏是否完成
+			k = judge1(map);						//判断游戏是否完成
 			
 		}
 		num++;						//关卡完成后关卡数+1
