@@ -276,7 +276,7 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		}
 		else if ((map[y+1][x] == 2|| map[y + 1][x] == 6) && map[y+2][x] != 1)//目标方向为箱子，箱子旁边不为墙壁
 		{
-			if (map[y][x] == 5&& map[y + 1][x] == 2&& map[y + 2][x] != 4)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
+			if (map[y][x] == 5&& map[y + 1][x] == 2&& map[y + 2][x] == 0)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
 			{
 				clean(x, y);
 				clean(x, y + 1);
@@ -302,7 +302,7 @@ void judge(int a, int map[10][10], int peoplexy[2])
 				map[y + 1][x] = 3;
 				map[y + 2][x] = 6;
 			}
-			else if (map[y][x] == 5 && map[y + 1][x] == 6 && map[y + 2][x] != 4)//人与目标重合，箱子与目标重合，箱子方向不为目标点
+			else if (map[y][x] == 5 && map[y + 1][x] == 6 && map[y + 2][x] == 0)//人与目标重合，箱子与目标重合，箱子方向不为目标点
 			{
 				clean(x, y);
 				clean(x, y + 1);
@@ -421,7 +421,7 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		}
 		else if ((map[y - 1][x] == 2 || map[y - 1][x] == 6) && map[y - 2][x] != 1)//目标方向为箱子，箱子旁边不为墙壁
 		{
-			if (map[y][x] == 5 && map[y - 1][x] == 2 && map[y - 2][x] != 4)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
+			if (map[y][x] == 5 && map[y - 1][x] == 2 && map[y - 2][x] == 0)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
 			{
 				clean(x, y);
 				clean(x, y - 1);
@@ -447,7 +447,7 @@ void judge(int a, int map[10][10], int peoplexy[2])
 				map[y - 1][x] = 3;
 				map[y - 2][x] = 6;
 			}
-			else if (map[y][x] == 5 && map[y - 1][x] == 6 && map[y - 2][x] != 4)//人与目标重合，箱子与目标重合，箱子方向不为目标点
+			else if (map[y][x] == 5 && map[y - 1][x] == 6 && map[y - 2][x] == 0)//人与目标重合，箱子与目标重合，箱子方向不为目标点
 			{
 				clean(x, y);
 				clean(x, y - 1);
@@ -566,7 +566,7 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		}
 		else if ((map[y][x - 1] == 2 || map[y][x - 1] == 6) && map[y][x - 2] != 1)//目标方向为箱子，箱子旁边不为墙壁
 		{
-			if (map[y][x] == 5 && map[y][x - 1] == 2 && map[y][x - 2] != 4)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
+			if (map[y][x] == 5 && map[y][x - 1] == 2 && map[y][x - 2] == 0)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
 			{
 				clean(x, y);
 				clean(x - 1, y);
@@ -592,7 +592,7 @@ void judge(int a, int map[10][10], int peoplexy[2])
 				map[y][x - 1] = 3;
 				map[y][x - 2] = 6;
 			}
-			else if (map[y][x] == 5 && map[y][x - 1] == 6 && map[y][x - 2] != 4)//人与目标重合，箱子与目标重合，箱子方向不为目标点
+			else if (map[y][x] == 5 && map[y][x - 1] == 6 && map[y][x - 2] == 0)//人与目标重合，箱子与目标重合，箱子方向不为目标点
 			{
 				clean(x, y);
 				clean(x - 1, y);
@@ -711,7 +711,7 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		}
 		else if ((map[y][x + 1] == 2 || map[y][x + 1] == 6) && map[y][x + 2] != 1)//目标方向为箱子，箱子旁边不为墙壁
 		{
-			if (map[y][x] == 5 && map[y][x + 1] == 2 && map[y][x + 2] != 4)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
+			if (map[y][x] == 5 && map[y][x + 1] == 2 && map[y][x + 2] == 0)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
 			{
 				clean(x, y);
 				clean(x + 1, y);
@@ -737,7 +737,7 @@ void judge(int a, int map[10][10], int peoplexy[2])
 				map[y][x + 1] = 3;
 				map[y][x + 2] = 6;
 			}
-			else if (map[y][x] == 5 && map[y][x + 1] == 6 && map[y][x + 2] != 4)//人与目标重合，箱子与目标重合，箱子方向不为目标点
+			else if (map[y][x] == 5 && map[y][x + 1] == 6 && map[y][x + 2] == 0)//人与目标重合，箱子与目标重合，箱子方向不为目标点
 			{
 				clean(x, y);
 				clean(x + 1, y);
