@@ -3,6 +3,7 @@
 #include<stdio.h>
 #define KEY_DOWN(vk_c) (GetAsyncKeyState(vk_c)&0x8000)
 int peoplexy[2] = { 0 };		 //存放人物所在坐标
+int n = 1;//标记人物朝向
 void draw_map(int a[10][10])//将地图画出，使用数组储存地图信息，0为空白，
 {
 	int y,x;
@@ -237,20 +238,19 @@ void judge(int a, int map[10][10], int peoplexy[2])
 	switch (a)
 	{
 	case 1://向下
+		if (n != 1)
+		{
+			people(x, y);
+			n = 1;
+			break;
+		}
 		if (map[y+1][x] == 0)//目标方向为空
 		{
 			if (map[y][x] == 5)//人与目标点重合
 			{
-				clean(x, y);
 				people2(x, y);
-				Sleep(100);
-				clean(x, y);
-				clean(x, y + 1);
 				people2(x, y + 1);
-				Sleep(100);
-				clean(x, y + 1);
 				people(x, y + 1);
-				clean(x, y);
 				point(x, y);
 				peoplexy[0] = y + 1;
 				map[y][x] = 4;
@@ -258,15 +258,9 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else
 			{
-				clean(x, y);
 				people2(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x, y + 1);
 				people2(x, y + 1);
-				Sleep(100);
-				clean(x, y + 1);
 				people(x, y + 1);
 				peoplexy[0] = y + 1;
 				map[y][x] = 0;
@@ -277,15 +271,9 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		{
 			if (map[y][x] == 5)//人与目标点重合
 			{
-				clean(x, y);
 				people2(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x, y + 1);
 				people2(x, y + 1);
-				Sleep(100);
-				clean(x, y + 1);
 				people(x, y + 1);
 				peoplexy[0] = y + 1;
 				map[y][x] = 4;
@@ -293,15 +281,9 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else
 			{
-				clean(x, y);
 				people2(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x, y + 1);
 				people2(x, y + 1);
-				Sleep(100);
-				clean(x, y + 1);
 				people(x, y + 1);
 				peoplexy[0] = y + 1;
 				map[y][x] = 0;
@@ -312,18 +294,11 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		{
 			if (map[y][x] == 5&& map[y + 1][x] == 2&& map[y + 2][x] == 0)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people2(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x, y + 1);
 				people2(x, y + 1);
-				Sleep(100);
-				clean(x, y + 1);
 				people(x, y + 1);
 				peoplexy[0] = y + 1;
-				clean(x, y + 2);
 				box(x, y + 2);
 				map[y][x] = 4;
 				map[y + 1][x] = 3;
@@ -331,17 +306,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if(map[y][x] == 5 && map[y + 1][x] == 2 && map[y + 2][x] == 4)//人与目标重合，箱子不与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people2(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x, y + 1);
 				people2(x, y + 1);
-				Sleep(100);
-				clean(x, y + 1);
 				people(x, y + 1);
-				clean(x, y + 2);
 				peoplexy[0] = y + 1;
 				box2(x, y+2);
 				map[y][x] = 4;
@@ -350,17 +318,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 5 && map[y + 1][x] == 6 && map[y + 2][x] == 0)//人与目标重合，箱子与目标重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people2(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x, y + 1);
 				people2(x, y + 1);
-				Sleep(100);
-				clean(x, y + 1);
 				people(x, y + 1);
-				clean(x, y + 2);
 				peoplexy[0] = y + 1;
 				box(x, y + 2);
 				map[y][x] = 4;
@@ -369,17 +330,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 5 && map[y + 1][x] == 6 && map[y + 2][x] == 4)//人与目标重合，箱子与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people2(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x, y + 1);
 				people2(x, y + 1);
-				Sleep(100);
-				clean(x, y + 1);
 				people(x, y + 1);
-				clean(x, y + 2);
 				peoplexy[0] = y + 1;
 				box2(x, y + 2);
 				map[y][x] = 4;
@@ -388,17 +342,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y + 1][x] == 2 && map[y + 2][x] == 0)//人不与目标重合，箱子不与目标重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people2(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x, y + 1);
 				people2(x, y + 1);
-				Sleep(100);
-				clean(x, y + 1);
 				people(x, y + 1);
-				clean(x, y + 2);
 				peoplexy[0] = y + 1;
 				box(x, y + 2);
 				map[y][x] = 0;
@@ -407,17 +354,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y + 1][x] == 2 && map[y + 2][x] == 4)//人不与目标重合，箱子不与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people2(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x, y + 1);
 				people2(x, y + 1);
-				Sleep(100);
-				clean(x, y + 1);
 				people(x, y + 1);
-				clean(x, y + 2);
 				peoplexy[0] = y + 1;
 				box2(x, y + 2);
 				map[y][x] = 0;
@@ -426,17 +366,11 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y + 1][x] == 6 && map[y + 2][x] == 0)//人不与目标重合，箱子与目标重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people2(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x, y + 1);
 				people2(x, y + 1);
-				clean(x, y + 1);
 				people(x, y + 1);
 				peoplexy[0] = y + 1;
-				clean(x, y + 2);
 				box(x, y + 2);
 				map[y][x] = 0;
 				map[y + 1][x] = 5;
@@ -444,17 +378,11 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y + 1][x] == 6 && map[y + 2][x] == 4)//人不与目标重合，箱子与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people2(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x, y + 1);
 				people2(x, y + 1);
-				clean(x, y + 1);
 				people(x, y + 1);
 				peoplexy[0] = y + 1;
-				clean(x, y + 2);
 				box2(x, y + 2);
 				map[y][x] = 0;
 				map[y + 1][x] = 5;
@@ -463,20 +391,19 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		}
 		break;
 	case 2://向上
+		if (n != 2)
+		{
+			people11(x, y);
+			n = 2;
+			break;
+		}
 		if (map[y - 1][x] == 0)//目标方向为空
 		{
 			if (map[y][x] == 5)//人与目标点重合
 			{
-				clean(x, y);
 				people1(x, y);
-				Sleep(100);
-				clean(x, y);
-				clean(x, y - 1);
 				people1(x, y - 1);
-				Sleep(100);
-				clean(x, y - 1);
-				people(x, y - 1);
-				clean(x, y);
+				people11(x, y - 1);
 				point(x, y);
 				peoplexy[0] = y - 1;
 				map[y][x] = 4;
@@ -484,16 +411,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else
 			{
-				clean(x, y);
 				people1(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x, y - 1);
 				people1(x, y - 1);
-				Sleep(100);
-				clean(x, y - 1);
-				people(x, y - 1);
+				people11(x, y - 1);
 				peoplexy[0] = y - 1;
 				map[y][x] = 0;
 				map[y - 1][x] = 3;
@@ -503,32 +424,20 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		{
 			if (map[y][x] == 5)//人与目标点重合
 			{
-				clean(x, y);
 				people1(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x, y - 1);
 				people1(x, y - 1);
-				Sleep(100);
-				clean(x, y - 1);
-				people(x, y - 1);
+				people11(x, y - 1);
 				peoplexy[0] = y - 1;
 				map[y][x] = 4;
 				map[y - 1][x] = 5;
 			}
 			else
 			{
-				clean(x, y);
 				people1(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x, y - 1);
 				people1(x, y - 1);
-				Sleep(100);
-				clean(x, y - 1);
-				people(x, y - 1);
+				people11(x, y - 1);
 				peoplexy[0] = y - 1;
 				map[y][x] = 0;
 				map[y - 1][x] = 5;
@@ -538,18 +447,11 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		{
 			if (map[y][x] == 5 && map[y - 1][x] == 2 && map[y - 2][x] == 0)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people1(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x, y - 1);
 				people1(x, y - 1);
-				Sleep(100);
-				clean(x, y - 1);
-				people(x, y - 1);
+				people11(x, y - 1);
 				peoplexy[0] = y - 1;
-				clean(x, y - 2);
 				box(x, y - 2);
 				map[y][x] = 4;
 				map[y - 1][x] = 3;
@@ -557,17 +459,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 5 && map[y - 1][x] == 2 && map[y - 2][x] == 4)//人与目标重合，箱子不与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people1(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x, y - 1);
 				people1(x, y - 1);
-				Sleep(100);
-				clean(x, y - 1);
-				people(x, y - 1);
-				clean(x, y - 2);
+				people11(x, y - 1);
 				peoplexy[0] = y - 1;
 				box2(x, y - 2);
 				map[y][x] = 4;
@@ -576,17 +471,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 5 && map[y - 1][x] == 6 && map[y - 2][x] == 0)//人与目标重合，箱子与目标重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people1(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x, y - 1);
 				people1(x, y - 1);
-				Sleep(100);
-				clean(x, y - 1);
-				people(x, y - 1);
-				clean(x, y - 2);
+				people11(x, y - 1);
 				peoplexy[0] = y - 1;
 				box(x, y - 2);
 				map[y][x] = 4;
@@ -595,17 +483,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 5 && map[y - 1][x] == 6 && map[y - 2][x] == 4)//人与目标重合，箱子与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people1(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x, y - 1);
 				people1(x, y - 1);
-				Sleep(100);
-				clean(x, y - 1);
-				people(x, y - 1);
-				clean(x, y - 2);
+				people11(x, y - 1);
 				peoplexy[0] = y - 1;
 				box2(x, y - 2);
 				map[y][x] = 4;
@@ -614,17 +495,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y - 1][x] == 2 && map[y - 2][x] == 0)//人不与目标重合，箱子不与目标重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people1(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x, y - 1);
 				people1(x, y - 1);
-				Sleep(100);
-				clean(x, y - 1);
-				people(x, y - 1);
-				clean(x, y - 2);
+				people11(x, y - 1);
 				peoplexy[0] = y - 1;
 				box(x, y - 2);
 				map[y][x] = 0;
@@ -633,17 +507,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y - 1][x] == 2 && map[y - 2][x] == 4)//人不与目标重合，箱子不与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people1(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x, y - 1);
 				people1(x, y - 1);
-				Sleep(100);
-				clean(x, y - 1);
-				people(x, y - 1);
-				clean(x, y - 2);
+				people11(x, y - 1);
 				peoplexy[0] = y - 1;
 				box2(x, y - 2);
 				map[y][x] = 0;
@@ -652,17 +519,11 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y - 1][x] == 6 && map[y - 2][x] == 0)//人不与目标重合，箱子与目标重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people1(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x, y - 1);
 				people1(x, y - 1);
-				clean(x, y - 1);
-				people(x, y - 1);
+				people11(x, y - 1);
 				peoplexy[0] = y - 1;
-				clean(x, y - 2);
 				box(x, y - 2);
 				map[y][x] = 0;
 				map[y - 1][x] = 5;
@@ -670,17 +531,11 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y - 1][x] == 6 && map[y - 2][x] == 4)//人不与目标重合，箱子与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people1(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x, y - 1);
 				people1(x, y - 1);
-				clean(x, y - 1);
-				people(x, y - 1);
+				people11(x, y - 1);
 				peoplexy[0] = y - 1;
-				clean(x, y - 2);
 				box2(x, y - 2);
 				map[y][x] = 0;
 				map[y - 1][x] = 5;
@@ -689,36 +544,30 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		}
 		break;
 	case 3://向左
+		if (n != 3)
+		{
+			people33(x, y);
+			n = 3;
+			break;
+		}
 		if (map[y][x - 1] == 0)//目标方向为空
 		{
 			if (map[y][x] == 5)//人与目标点重合
 			{
-				clean(x, y);
 				people3(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x - 1, y);
 				people3(x - 1, y);
-				Sleep(100);
-				clean(x - 1, y);
-				people(x - 1, y);
+				people33(x - 1, y);
 				peoplexy[1] = x - 1;
 				map[y][x] = 4;
 				map[y][x - 1] = 3;
 			}
 			else
 			{
-				clean(x, y);
 				people3(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x - 1, y);
 				people3(x - 1, y);
-				Sleep(100);
-				clean(x - 1, y);
-				people(x - 1, y);
+				people33(x - 1, y);
 				peoplexy[1] = x - 1;
 				map[y][x] = 0;
 				map[y][x - 1] = 3;
@@ -728,32 +577,20 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		{
 			if (map[y][x] == 5)//人与目标点重合
 			{
-				clean(x, y);
 				people3(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x - 1, y);
 				people3(x - 1, y);
-				Sleep(100);
-				clean(x - 1, y);
-				people(x - 1, y);
+				people33(x - 1, y);
 				peoplexy[1] = x - 1;
 				map[y][x] = 4;
 				map[y][x - 1] = 5;
 			}
 			else
 			{
-				clean(x, y);
 				people3(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x - 1, y);
 				people3(x - 1, y);
-				Sleep(100);
-				clean(x - 1, y);
-				people(x - 1, y);
+				people33(x - 1, y);
 				peoplexy[1] = x - 1;
 				map[y][x] = 0;
 				map[y][x - 1] = 5;
@@ -763,18 +600,11 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		{
 			if (map[y][x] == 5 && map[y][x - 1] == 2 && map[y][x - 2] == 0)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people3(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x - 1, y);
 				people3(x - 1, y);
-				Sleep(100);
-				clean(x - 1, y);
-				people(x - 1, y);
+				people33(x - 1, y);
 				peoplexy[1] = x - 1;
-				clean(x - 2, y);
 				box(x - 2, y);
 				map[y][x] = 4;
 				map[y][x - 1] = 3;
@@ -782,17 +612,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 5 && map[y][x - 1] == 2 && map[y][x - 2] == 4)//人与目标重合，箱子不与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people3(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x - 1, y);
 				people3(x - 1, y);
-				Sleep(100);
-				clean(x - 1, y);
-				people(x - 1, y);
-				clean(x - 2, y);
+				people33(x - 1, y);
 				peoplexy[1] = x - 1;
 				box2(x - 2, y);
 				map[y][x] = 4;
@@ -801,17 +624,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 5 && map[y][x - 1] == 6 && map[y][x - 2] == 0)//人与目标重合，箱子与目标重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people3(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x - 1, y);
 				people3(x - 1, y);
-				Sleep(100);
-				clean(x - 1, y);
-				people(x - 1, y);
-				clean(x - 2, y);
+				people33(x - 1, y);
 				peoplexy[1] = x - 1;
 				box(x - 2, y);
 				map[y][x] = 4;
@@ -820,17 +636,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 5 && map[y][x - 1] == 6 && map[y][x - 2] == 4)//人与目标重合，箱子与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people3(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x - 1, y);
 				people3(x - 1, y);
-				Sleep(100);
-				clean(x - 1, y);
-				people(x - 1, y);
-				clean(x - 2, y);
+				people33(x - 1, y);
 				peoplexy[1] = x - 1;
 				box2(x - 2, y);
 				map[y][x] = 4;
@@ -839,17 +648,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y][x - 1] == 2 && map[y][x - 2] == 0)//人不与目标重合，箱子不与目标重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people3(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x - 1, y);
 				people3(x - 1, y);
-				Sleep(100);
-				clean(x - 1, y);
-				people(x - 1, y);
-				clean(x - 2, y);
+				people33(x - 1, y);
 				peoplexy[1] = x - 1;
 				box(x - 2, y);
 				map[y][x] = 0;
@@ -858,17 +660,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y][x - 1] == 2 && map[y][x - 2] == 4)//人不与目标重合，箱子不与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people3(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x - 1, y);
 				people3(x - 1, y);
-				Sleep(100);
-				clean(x - 1, y);
-				people(x - 1, y);
-				clean(x - 2, y);
+				people33(x - 1, y);
 				peoplexy[1] = x - 1;
 				box2(x - 2, y);
 				map[y][x] = 0;
@@ -877,17 +672,11 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y][x - 1] == 6 && map[y][x - 2] == 0)//人不与目标重合，箱子与目标重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people3(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x - 1, y);
 				people3(x - 1, y);
-				clean(x - 1, y);
-				people(x - 1, y);
+				people33(x - 1, y);
 				peoplexy[1] = x - 1;
-				clean(x - 2, y);
 				box(x - 2, y);
 				map[y][x] = 0;
 				map[y][x - 1] = 5;
@@ -895,17 +684,11 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y][x - 1] == 6 && map[y][x - 2] == 4)//人不与目标重合，箱子与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people3(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x - 1, y);
 				people3(x - 1, y);
-				clean(x - 1, y);
-				people(x - 1, y);
+				people33(x - 1, y);
 				peoplexy[1] = x - 1;
-				clean(x - 2, y);
 				box2(x - 2, y);
 				map[y][x] = 0;
 				map[y][x - 1] = 5;
@@ -914,36 +697,30 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		}
 		break;
 	case 4://向右
+		if (n != 4)
+		{
+			people44(x, y);
+			n = 4;
+			break;
+		}
 		if (map[y][x + 1] == 0)//目标方向为空
 		{
 			if (map[y][x] == 5)//人与目标点重合
 			{
-				clean(x, y);
 				people4(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x + 1, y);
 				people4(x + 1, y);
-				Sleep(100);
-				clean(x + 1, y);
-				people(x + 1, y);
+				people44(x + 1, y);
 				peoplexy[1] = x + 1;
 				map[y][x] = 4;
 				map[y][x + 1] = 3;
 			}
 			else
 			{
-				clean(x, y);
 				people4(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x + 1, y);
 				people4(x + 1, y);
-				Sleep(100);
-				clean(x + 1, y);
-				people(x + 1, y);
+				people44(x + 1, y);
 				peoplexy[1] = x + 1;
 				map[y][x] = 0;
 				map[y][x + 1] = 3;
@@ -953,32 +730,20 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		{
 			if (map[y][x] == 5)//人与目标点重合
 			{
-				clean(x, y);
 				people4(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x + 1, y);
 				people4(x + 1, y);
-				Sleep(100);
-				clean(x + 1, y);
-				people(x + 1, y);
+				people44(x + 1, y);
 				peoplexy[1] = x + 1;
 				map[y][x] = 4;
 				map[y][x + 1] = 5;
 			}
 			else
 			{
-				clean(x, y);
 				people4(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x + 1, y);
 				people4(x + 1, y);
-				Sleep(100);
-				clean(x + 1, y);
-				people(x + 1, y);
+				people44(x + 1, y);
 				peoplexy[1] = x + 1;
 				map[y][x] = 0;
 				map[y][x + 1] = 5;
@@ -988,18 +753,11 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		{
 			if (map[y][x] == 5 && map[y][x + 1] == 2 && map[y][x + 2] == 0)//人与目标点重合,箱子不与目标点重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people4(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x + 1, y);
 				people4(x + 1, y);
-				Sleep(100);
-				clean(x + 1, y);
-				people(x + 1, y);
+				people44(x + 1, y);
 				peoplexy[1] = x + 1;
-				clean(x + 2, y);
 				box(x + 2, y);
 				map[y][x] = 4;
 				map[y][x + 1] = 3;
@@ -1007,17 +765,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 5 && map[y][x + 1] == 2 && map[y][x + 2] == 4)//人与目标重合，箱子不与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people4(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x + 1, y);
 				people4(x + 1, y);
-				Sleep(100);
-				clean(x + 1, y);
-				people(x + 1, y);
-				clean(x + 2, y);
+				people44(x + 1, y);
 				peoplexy[1] = x + 1;
 				box2(x + 2, y);
 				map[y][x] = 4;
@@ -1026,17 +777,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 5 && map[y][x + 1] == 6 && map[y][x + 2] == 0)//人与目标重合，箱子与目标重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people4(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x + 1, y);
 				people4(x + 1, y);
-				Sleep(100);
-				clean(x + 1, y);
-				people(x + 1, y);
-				clean(x + 2, y);
+				people44(x + 1, y);
 				peoplexy[1] = x + 1;
 				box(x + 2, y);
 				map[y][x] = 4;
@@ -1045,17 +789,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 5 && map[y][x + 1] == 6 && map[y][x + 2] == 4)//人与目标重合，箱子与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people4(x, y);
-				Sleep(100);
-				clean(x, y);
 				point(x, y);
-				clean(x + 1, y);
 				people4(x + 1, y);
-				Sleep(100);
-				clean(x + 1, y);
-				people(x + 1, y);
-				clean(x + 2, y);
+				people44(x + 1, y);
 				peoplexy[1] = x + 1;
 				box2(x + 2, y);
 				map[y][x] = 4;
@@ -1064,17 +801,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y][x + 1] == 2 && map[y][x + 2] == 0)//人不与目标重合，箱子不与目标重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people4(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x + 1, y);
 				people4(x + 1, y);
-				Sleep(100);
-				clean(x + 1, y);
-				people(x + 1, y);
-				clean(x + 2, y);
+				people44(x + 1, y);
 				peoplexy[1] = x + 1;
 				box(x + 2, y);
 				map[y][x] = 0;
@@ -1083,17 +813,10 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y][x + 1] == 2 && map[y][x + 2] == 4)//人不与目标重合，箱子不与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people4(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x + 1, y);
 				people4(x + 1, y);
-				Sleep(100);
-				clean(x + 1, y);
-				people(x + 1, y);
-				clean(x + 2, y);
+				people44(x + 1, y);
 				peoplexy[1] = x + 1;
 				box2(x + 2, y);
 				map[y][x] = 0;
@@ -1102,17 +825,11 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y][x + 1] == 6 && map[y][x + 2] == 0)//人不与目标重合，箱子与目标重合，箱子方向不为目标点
 			{
-				clean(x, y);
 				people4(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x + 1, y);
 				people4(x + 1, y);
-				clean(x + 1, y);
-				people(x + 1, y);
+				people44(x + 1, y);
 				peoplexy[1] = x + 1;
-				clean(x + 2, y);
 				box(x + 2, y);
 				map[y][x] = 0;
 				map[y][x + 1] = 5;
@@ -1120,17 +837,11 @@ void judge(int a, int map[10][10], int peoplexy[2])
 			}
 			else if (map[y][x] == 3 && map[y][x + 1] == 6 && map[y][x + 2] == 4)//人不与目标重合，箱子与目标重合，箱子方向为目标点
 			{
-				clean(x, y);
 				people4(x, y);
-				Sleep(100);
-				clean(x, y);
 				background(x, y);
-				clean(x + 1, y);
 				people4(x + 1, y);
-				clean(x + 1, y);
-				people(x + 1, y);
+				people44(x + 1, y);
 				peoplexy[1] = x + 1;
-				clean(x + 2, y);
 				box2(x + 2, y);
 				map[y][x] = 0;
 				map[y][x + 1] = 5;
