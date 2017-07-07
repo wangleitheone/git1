@@ -1,5 +1,17 @@
 void wall(int x, int y);
 void box(int x, int y);
+void box2(int x, int y);
 void point(int x, int y);
 void people(int x, int y);
+void background(int x,int y);
+void people1(int x, int y);
+void people2(int x, int y);
+void people3(int x, int y);
+void people4(int x, int y);
 void clean(int x, int y);
+void getpeople_img();
+void getbackgroundimg();
+void getboximg();
+void getbox2img();
+void getwallimg();
+void getpointimg();
