@@ -62,7 +62,7 @@ void getpointimg()
 }
 void clean(int x, int y)//清空一片区域
 {
-	clearrectangle(x, y, x + 50, y + 50);
+	clearrectangle(x, y, x + 49, y + 49);
 }
 void wall(int x,int y)//画一块墙，参数为墙左上角xy坐标
 {

@@ -1,6 +1,7 @@
 #include "画图形.h"
 #include<graphics.h>
 #include<stdio.h>
+#include<string>
 #define KEY_DOWN(vk_c) (GetAsyncKeyState(vk_c)&0x8000)
 int peoplexy[2] = { 0 };		 //存放人物所在坐标
 int n = 1;//标记人物朝向
@@ -73,18 +74,18 @@ void change_map(int b,int a[10][10])//更换地图数据
 		0,0,0,0,0,0,0,0,0,0
 	};
 	int a3[10][10] = {
-		0,0,0,0,0,0,0,0,0,1,
-		0,0,0,1,1,1,0,0,0,0,
-		0,0,0,1,4,1,0,0,0,0,
-		0,0,0,1,2,1,1,1,1,0,
-		0,1,1,1,3,0,2,4,1,0,
-		0,1,4,2,0,0,1,1,1,0,
-		0,1,1,1,1,2,1,0,0,0,
-		0,0,0,0,1,4,1,0,0,0,
-		0,0,0,0,1,1,1,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,
+		0,1,1,1,1,1,0,0,0,0,
+		0,1,1,0,0,1,0,0,0,0,
+		0,1,0,3,2,1,0,0,0,0,
+		0,1,1,2,0,1,1,0,0,0,
+		0,1,1,0,2,0,1,0,0,0,
+		0,1,4,2,0,0,1,0,0,0,
+		0,1,4,4,6,4,1,0,0,0,
+		0,1,1,1,1,1,1,0,0,0,
 		0,0,0,0,0,0,0,0,0,0
 	};
-	int a4[10][10] = {
+	int a4[10][10] = {			//由于太费时间，所以只输入了三关地图数据演示一下
 		0,0,0,0,0,0,0,0,0,0,
 		0,0,0,1,1,1,0,0,0,0,
 		0,0,0,1,4,1,0,0,0,0,
@@ -229,6 +230,14 @@ int key()//追踪键盘输入信息
 		else if (KEY_DOWN(VK_SPACE))//space键回退一步
 		{
 			return 6;
+		}
+		else if (KEY_DOWN(0x59)|| KEY_DOWN(0x79))
+		{
+			return 7;
+		}
+		else if (KEY_DOWN(0x4e) || KEY_DOWN(0x6e))
+		{
+			return 8;
 		}
 }
 void judge(int a, int map[10][10], int peoplexy[2])
@@ -869,10 +878,29 @@ int judge1(int map[10][10])
 	}
 	return 0;
 }
+void caption()
+{
+	char *data[8] = {
+		"游戏介绍：" ,
+		"Eas键退出；上下左右键控",
+		"制人物移动；空格键可重新",
+		"开始当前关卡,将箱子推到小",
+		"红球标记的位置后，按Y继",
+		"续下一关，N退出游戏。如",
+		"遇到bug，请联系qq：","1183510062",
+
+	};
+	settextstyle(14, 0, "宋体");
+	settextcolor(RGB(0, 255, 255));
+	for ( int i = 0; i <= 7; i++)
+	{
+		outtextxy(515, 100+20*i, data[i]);
+	}
+}
 
 int main()
 {
-	initgraph(640, 500);
+	initgraph(700, 500);
 	int num = 1;                     //关卡计数
 	int map[10][10] = { 0 };         //存放地图数据
 	getpeople_img();
@@ -883,9 +911,10 @@ int main()
 	getpointimg();
 	while (1)
 	{
-		int k = 1;
+		ABC:int k = 1;
 		change_map(num,map);		//更换地图
 		cleardevice();				//清空屏幕，当前坐标点重置至(0,0)；
+		caption();
 		draw_map(map);				//重新画出地图
 		while (k)					//游戏进行
 		{
@@ -893,11 +922,38 @@ int main()
 			judge(s, map, peoplexy);	//判断键盘操作并执行执行
 			Sleep(100);					
 			k = judge1(map);						//判断游戏是否完成
-			
+			if (s == 5)
+			{
+				goto abc;
+			}
+			else if (s == 6)
+			{
+				goto ABC;
+			}
+		}
+		while (1)
+		{
+			int n = key();
+			if (n == 7)
+			{
+				break;
+			}
+			else if (n == 8)
+			{
+				goto abc;
+			}
 		}
 		num++;						//关卡完成后关卡数+1
 		
 	}
-	closegraph();
+	/*settextstyle(26, 15, "宋体");//原本打算做一个弹窗的效果，由于文字显示的背景颜色一直是黑色，似乎无法设置为其他颜色，因此放弃。
+	settextcolor(RGB(0, 255, 255));
+	char *s[4] = { "恭喜过关！","是否进入下一关？"
+		,"Y","N"
+	};
+	outtextxy(180, 160, s[0]);
+	outtextxy(130, 201, s[1]);*/
+	
+	abc:closegraph();
 
 }
