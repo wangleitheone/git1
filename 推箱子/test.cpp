@@ -350,7 +350,7 @@ void judge(int a, int map[10][10], int peoplexy[2])
 		break;
 	}
 }
-int judge1(int map[10][10])
+int judge1(int map[10][10])//通过地图上是否有箱子判断游戏是否完成
 {
 	for (int y = 0; y < 10; y++)
 	{
@@ -364,7 +364,7 @@ int judge1(int map[10][10])
 	}
 	return 0;
 }
-void caption()
+void caption()//游戏说明
 {
 	char *data[6] = {
 		"游戏介绍：" ,
@@ -395,7 +395,6 @@ int main()
 	getpointimg();
 	while (1)
 	{
-		PlaySound("./res/ding.wav", NULL, SND_FILENAME | SND_ASYNC);
 		ABC:int k = 1;
 		change_map(num,map);		//更换地图
 		cleardevice();				//清空屏幕，当前坐标点重置至(0,0)；
@@ -416,7 +415,7 @@ int main()
 				goto ABC;
 			}
 		}
-		while (1)
+		while (1)//是否进入下一关
 		{
 			settextcolor(YELLOW);
 			setbkmode(TRANSPARENT);
